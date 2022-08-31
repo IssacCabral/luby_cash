@@ -7,13 +7,13 @@ export default class extends BaseSeeder {
   public async run () {
     const searchKeyAdmin = {email: 'admin@email.com'}
     const userAdmin = await User.updateOrCreate(searchKeyAdmin, {
-      fullName: 'admin',
+      fullName: 'Admin',
       email: 'admin@email.com',
       password: 'secret',
-      cpf: '000.000.000-00' 
-    })
+      cpf: '000.000.000-00',
+    }) 
 
     const roleAdmin = await Role.findBy('name', 'admin')
-    if(roleAdmin) await userAdmin.related('roles').attach([roleAdmin.id])
+    if(roleAdmin) await userAdmin.related('roles').attach([roleAdmin.id]) 
   }
 }

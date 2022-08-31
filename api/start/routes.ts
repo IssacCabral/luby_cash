@@ -13,3 +13,8 @@ Route.get('/healthy', async ({ response }: HttpContextContract) => {
   })
 })
 
+// public routes
+Route.group(() => {
+  Route.post('/login', 'AuthController.login')
+
+}).prefix('luby-cash')
