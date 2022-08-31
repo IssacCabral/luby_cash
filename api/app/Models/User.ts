@@ -5,7 +5,13 @@ import Role from './Role'
 
 import Hash from '@ioc:Adonis/Core/Hash'
 
-export default class User extends BaseModel {
+import { Filterable } from '@ioc:Adonis/Addons/LucidFilter'
+import {compose} from '@ioc:Adonis/Core/Helpers'
+import UserFilter from './Filters/UserFilter'
+
+export default class User extends compose(BaseModel, Filterable) {
+  public static $filter = () => UserFilter
+
   @column({ isPrimary: true })
   public id: number
 
