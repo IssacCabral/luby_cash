@@ -18,3 +18,10 @@ Route.group(() => {
   Route.post('/login', 'AuthController.login')
 
 }).prefix('luby-cash')
+
+// admin routes
+Route.group(() => {
+  Route.resource('/admins', 'AdminsController').except(['create', 'edit'])
+})
+  .prefix('luby-cash')
+  .middleware(['auth', 'is:admin'])
