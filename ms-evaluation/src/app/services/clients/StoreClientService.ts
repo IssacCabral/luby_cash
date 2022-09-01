@@ -1,25 +1,28 @@
+import { Request } from "express-serve-static-core";
 import { Client } from "../../models/Client";
+import { Address } from "../../models/Address";
 import dataSource from "../../../database/data-source";
+import fillClientBeforeCreate from "../../utils/fillClientBeforeCreate";
+import fillAddressBeforeCreate from "../../utils/fillAddressBeforeCreate";
 
-interface IClientBodyRequest{
-    full_name: string,
-    email: string,
-    phone: string,
-    cpf: string,
-    current_balance: number,
-    average_salary: number,
-    status: string
-}
 
-interface IAddressBodyRequest{
-    street: string,
-    city: string,
-    state: string,
-    zip_code: string
-}
+export default class StoreClientService {
+    async execute(request: Request ,cpf: string): Promise<Client | Error> {
+        const clientRepository = dataSource.getRepository(Client)
+        const addressRepository = dataSource.getRepository(Address)
 
-export default class StoreClientService{
-    async execute({full_name, email, phone, cpf, current_balance, average_salary, status}: IClientBodyRequest, {}: IAddressBodyRequest){
+        const clientExists = await clientRepository.findOne({ where: { cpf } })
 
+        if (clientExists) return new Error('Client already exists')
+
+        const client = fillClientBeforeCreate(request)
+
+        await clientRepository.save(client)
+
+        const address = fillAddressBeforeCreate(request, client.id)
+
+        await addressRepository.save(address)
+
+        return client
     }
 }
