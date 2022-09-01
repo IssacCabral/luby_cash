@@ -1,0 +1,36 @@
+version: "3"
+
+networks:
+  luby_projects:
+    external: true
+
+services:
+  evaluation:
+    build:
+      context: .
+      dockerfile: ./Docker/api/Dockerfile
+    ports:
+      - "3334:3334"
+    volumes:
+      - .:/app
+    networks:
+      - luby_projects
+    depends_on:
+      - clients_db
+
+  clients_db:
+    build:
+      context: ./Docker/db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: clients_evaluation
+    ports:
+      - "3308:3306"
+    volumes:
+      - luby-cash-db-clients:/var/lib/mysql
+    networks:
+      - luby_projects
+
+
+volumes:
+  luby-cash-db-clients:
