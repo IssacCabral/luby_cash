@@ -1,10 +1,8 @@
-import {Entity, Column, CreateDateColumn, UpdateDateColumn,PrimaryColumn, OneToMany} from 'typeorm'
-
-import { Address } from './Address'
+import {Entity, Column, CreateDateColumn, UpdateDateColumn,PrimaryGeneratedColumn, OneToMany} from 'typeorm'
 
 @Entity('clients')
 export class Client{
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: number
 
     @Column()
@@ -14,7 +12,7 @@ export class Client{
     email: string
 
     @Column()
-    fone: string
+    phone: string
 
     @Column()
     cpf: string
@@ -27,9 +25,6 @@ export class Client{
 
     @Column()
     status: string
-
-    @OneToMany(() => Address, (address) => address.client)
-    addresses: Address[]
 
     @CreateDateColumn()
     created_at: Date

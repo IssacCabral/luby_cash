@@ -1,14 +1,11 @@
-import {Entity, Column, CreateDateColumn, UpdateDateColumn,PrimaryColumn, ManyToOne, JoinColumn} from 'typeorm'
+import {Entity, Column, CreateDateColumn, UpdateDateColumn,PrimaryGeneratedColumn, ManyToOne, JoinColumn} from 'typeorm'
 
 import { Client } from './Client'
 
 @Entity('addresses')
 export class Address{
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: number
-
-    @Column()
-    client_id: number
 
     @Column()
     street: string
@@ -22,7 +19,11 @@ export class Address{
     @Column()
     zip_code: string
 
-    @ManyToOne(() => Client, (client) => client.addresses)
+    @Column()
+    client_id: number
+
+    @ManyToOne(() => Client)
+    @JoinColumn({name: 'client_id'})
     client: Client
 
     @CreateDateColumn()
