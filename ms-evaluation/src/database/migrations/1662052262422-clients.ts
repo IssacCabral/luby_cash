@@ -28,7 +28,7 @@ export class clients1662052262422 implements MigrationInterface {
                     {
                         name: 'phone',
                         type: 'varchar',
-                        isUnique: true,
+                        isUnique: false,
                     },
                     {
                         name: 'cpf',
@@ -39,6 +39,7 @@ export class clients1662052262422 implements MigrationInterface {
                         name: 'current_balance',
                         type: 'decimal(8,2)',
                         unsigned: true,
+                        isNullable: true
                     },
                     {
                         name: 'average_salary',

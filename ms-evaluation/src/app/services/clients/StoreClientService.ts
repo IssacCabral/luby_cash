@@ -7,13 +7,9 @@ import fillAddressBeforeCreate from "../../utils/fillAddressBeforeCreate";
 
 
 export default class StoreClientService {
-    async execute(request: Request ,cpf: string): Promise<Client | Error> {
+    async execute(request: Request): Promise<Client> {
         const clientRepository = dataSource.getRepository(Client)
         const addressRepository = dataSource.getRepository(Address)
-
-        const clientExists = await clientRepository.findOne({ where: { cpf } })
-
-        if (clientExists) return new Error('Client already exists')
 
         const client = fillClientBeforeCreate(request)
 

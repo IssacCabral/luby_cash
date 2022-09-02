@@ -11,7 +11,7 @@ export default function fillClientBeforeCreate(request: Request): Client {
     if(average_salary < 500){
         const client = clientRepository.create({
             full_name, email, phone, cpf, average_salary,
-            status: 'desaproved'
+            status: 'desaproved', current_balance: null
         })
         return client
     }else{
