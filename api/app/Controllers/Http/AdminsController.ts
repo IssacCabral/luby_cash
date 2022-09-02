@@ -3,8 +3,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 import Role from 'App/Models/Role'
 
-import StoreValidator from 'App/Validators/User/StoreValidator'
-import UpdateValidator from 'App/Validators/User/UpdateValidator'
+import StoreValidator from 'App/Validators/Admin/StoreValidator'
+import UpdateValidator from 'App/Validators/Admin/UpdateValidator'
 
 import {ReturnAdminAfterCreate, ReturnAdminAfterUpdate} from 'App/utils/ReturnAdmins'
 
@@ -90,8 +90,6 @@ export default class AdminsController {
       }
 
       admin = await User.findByOrFail('id', adminId)
-
-      console.log(admin.serialize())
 
       await admin.merge(bodyUpdate).save()
 

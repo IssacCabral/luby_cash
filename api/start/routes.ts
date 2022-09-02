@@ -17,6 +17,8 @@ Route.get('/healthy', async ({ response }: HttpContextContract) => {
 Route.group(() => {
   Route.post('/login', 'AuthController.login')
 
+  Route.post('/clients', 'ClientsController.store')
+
 }).prefix('luby-cash')
 
 // admin routes
@@ -25,3 +27,5 @@ Route.group(() => {
 })
   .prefix('luby-cash')
   .middleware(['auth', 'is:admin'])
+
+  

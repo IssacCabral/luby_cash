@@ -9,8 +9,6 @@ export default class AuthController {
 
     const user = await User.query().where('email', email).preload('roles').first()
 
-    console.log(Env.get('NODE_ENV'))
-
     try {
       const token = await auth.use('api').attempt(email, password, {
         name: user?.fullName,
