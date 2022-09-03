@@ -1,0 +1,17 @@
+version: "3"
+
+networks:
+  luby_projects:
+    external: true
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./Docker/api/Dockerfile
+    ports:
+      - "3335:3335"
+    volumes:
+      - .:/app
+    networks:
+      - luby_projects
