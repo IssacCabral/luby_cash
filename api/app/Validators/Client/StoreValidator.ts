@@ -9,7 +9,7 @@ export default class StoreValidator extends MessagesCustom{
   }
 
   public schema = schema.create({
-    fullName: schema.string({trim: true}, [
+    full_name: schema.string({trim: true}, [
       rules.maxLength(50),
       rules.minLength(3),
       rules.regex(/^[ a-zA-ZÀ-ÿ\u00f1\u00d1]*$/g)
