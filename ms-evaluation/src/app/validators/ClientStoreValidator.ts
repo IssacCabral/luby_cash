@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Client } from "../models/Client";
 import dataSource from "../../database/data-source";
-import StoreClientBodyMandatoryData from "../utils/StoreClientBodyMandatoryData";
 
 export default async function ClientStoreValidator(request: Request, response: Response) {
     const clientRepository = dataSource.getRepository(Client)
@@ -16,5 +15,5 @@ export default async function ClientStoreValidator(request: Request, response: R
         return findClientByCpf.status === 'approved' ? new Error('client already exists, cpf duplicate') : new Error('this client is desaproved, cpf duplicate')
     }
 
-
+    
 }

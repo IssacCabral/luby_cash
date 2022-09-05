@@ -19,6 +19,4 @@ export default async function VerifyCpfsInput(cpf_issuer: string, cpf_recipient:
         if(role.name === 'admin') throw new Error('only clients can make transactions. check recipient cpf')
     })
 
-    console.log('to aqui??')
-
 } 

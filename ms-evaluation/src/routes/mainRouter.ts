@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import clientRouter from "./clientRoutes";
+import transactionRouter from "./transactionRouter";
 
 const mainRouter = Router()
 
@@ -11,3 +12,4 @@ mainRouter.get('/', (req, res) => {
 
 export default mainRouter
                     .use(clientRouter)
+                    .use(transactionRouter)
