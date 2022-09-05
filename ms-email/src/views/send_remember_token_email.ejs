@@ -87,25 +87,18 @@
 <body>
     <div class="container">
         <div class="content">
-            <br>
             <h2>Hi, <%= full_name %>!</h2>
             <br>
-            <p class="approved" style="color: #FFF">
-                Congratulations, you have been approved to be our client :D!
-            </p>
-
-            <p class="approved" style="color:rgb(14, 64, 11)">
-                To start a good relationship, we are giving you a bonus of 200$
-            </p>
+            <p>Here is your password recovery token: <%= rememberMeToken %></p>
         </div>
 
         <div class="subcontent">
             <p class="outline-green">
-                Click below to see all LubyCash services ;)
+                "Click below to refresh your password:
             </p>
-            <a href="https://lubycash.com/services">
+            <a href="https://lubycash.com/forgot-password/refresh">
                 <button>
-                    Our Services
+                    Forgot password
                 </button>
             </a>
         </div>

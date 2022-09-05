@@ -16,8 +16,10 @@ Route.get('/healthy', async ({ response }: HttpContextContract) => {
 // public routes
 Route.group(() => {
   Route.post('/login', 'AuthController.login')
-
   Route.post('/clients', 'ClientsController.store')
+
+  Route.post('/forgot-password', 'ForgotsPasswordsController.store')
+  Route.put('/recovery-password', 'ForgotsPasswordsController.updatePassword')
 
 }).prefix('luby-cash')
 

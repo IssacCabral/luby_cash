@@ -30,7 +30,7 @@ export default class User extends compose(BaseModel, Filterable) {
   @column({serializeAs: null})
   public rememberMeToken?: string | null
 
-  @column({serializeAs: null})
+  @column.dateTime({serializeAs: null})
   public rememberMeTokenCreatedAt?: DateTime | null
 
   @manyToMany(() => Role, {

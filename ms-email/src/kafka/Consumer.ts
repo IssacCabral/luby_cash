@@ -4,6 +4,7 @@ import kafka from './kafka-config'
 
 import SendNewClientEmail from '../handle-consumer/SendNewClientEmail'
 import SendDesaprovedClientEmail from '../handle-consumer/SendDesaprovedClientEmail'
+import SendRememberTokenEmail from '../handle-consumer/SendRememberTokenEmail'
 
 export default class Consumer{
     public consumer: KafkaConsumer
@@ -36,9 +37,9 @@ export default class Consumer{
                     case 'desaproved-client-email':
                         new SendDesaprovedClientEmail().sendEmail(message, 'Sorry for the Inconvenience', 'send_desaproved_client_email.ejs')
                         break    
-                    // case 'remember-token-email':
-                    //     new SendRememberTokenEmail().sendEmail(message, 'Recover Your password', 'send_remember_token_email.ejs')
-                    //     break   
+                    case 'remember-token-email':
+                        new SendRememberTokenEmail().sendEmail(message, 'Recover Your password', 'send_remember_token_email.ejs')
+                        break   
                     default:
                         console.log('nao passei em nenhum')     
                 }
