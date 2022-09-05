@@ -30,4 +30,9 @@ Route.group(() => {
   .prefix('luby-cash')
   .middleware(['auth', 'is:admin'])
 
-  
+// transactions routes
+Route.group(() => {
+  Route.post('/transactions', 'TransactionsController.store')
+})  
+  .prefix('luby-cash')
+  .middleware(['auth', 'is:client'])
