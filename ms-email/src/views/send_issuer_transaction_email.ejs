@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issuer Transaction</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+            font-style: italic;
+            color: #707070;
+        }
+
+        html,
+        body {
+            width: 100%;
+            background: #F7F7F7 0% 0% no-repeat padding-box;
+            opacity: 1;
+            font-style: italic;
+        }
+
+        .container {
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 90%;
+        }
+
+        .outline-green {
+            border-bottom: 3px solid #B5C401;
+        }
+
+        .desaproved {
+            background-color: #fd7575;
+            padding: 2rem;
+        }
+
+        .content {
+            margin-bottom: 2rem;
+        }
+
+        .content h2 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        .content p {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .subcontent {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .subcontent p {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 100;
+        }
+
+        button {
+            padding: 1rem 2.4rem;
+            color: #B5C401;
+            font-weight: 500;
+            border-radius: .5rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="content">
+            <h2>Hi <%= full_name %> </h2>
+            <br>
+            <p>You made a R$<%= transfer_value %> transfer to <span class="outline-green"> <%= recipient_name %> </span></p>
+        </div>
+
+        <div class="subcontent">
+            <p class="outline-green">
+                Click below to access our services
+            </p>
+            <a href="https://lubycash.com/services">
+                <button>
+                    Dashboard
+                </button>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

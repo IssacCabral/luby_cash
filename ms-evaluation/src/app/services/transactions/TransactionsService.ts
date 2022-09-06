@@ -20,6 +20,6 @@ export default class TransactionsService{
         let issuerUpdated = await clientRepository.findOne({where: {cpf: cpf_issuer}})
         const recipientUpdated = await clientRepository.findOne({where: {cpf: cpf_recipient}})
 
-        return {issuerUpdated, recipientUpdated}
+        return {success: 'transaction successfully', issuerUpdated, recipientUpdated}
     }
 }

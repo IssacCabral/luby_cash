@@ -5,6 +5,8 @@ import kafka from './kafka-config'
 import SendNewClientEmail from '../handle-consumer/SendNewClientEmail'
 import SendDesaprovedClientEmail from '../handle-consumer/SendDesaprovedClientEmail'
 import SendRememberTokenEmail from '../handle-consumer/SendRememberTokenEmail'
+import SendIssuerTransactionEmail from '../handle-consumer/SendIssuerTransationEmail'
+import SendRecipientTransactionEmail from '../handle-consumer/SendRecipientTransactionEmail'
 
 export default class Consumer{
     public consumer: KafkaConsumer
@@ -40,6 +42,12 @@ export default class Consumer{
                     case 'remember-token-email':
                         new SendRememberTokenEmail().sendEmail(message, 'Recover Your password', 'send_remember_token_email.ejs')
                         break   
+                    case 'issuer-transaction-email':
+                        new SendIssuerTransactionEmail().sendEmail(message, 'Transfer Send', 'send_issuer_transaction_email.ejs')
+                        break
+                    case 'recipient-transaction-email':
+                        new SendRecipientTransactionEmail().sendEmail(message, 'Received Transfer', 'send_recipient_transaction_email.ejs')
+                        break        
                     default:
                         console.log('nao passei em nenhum')     
                 }

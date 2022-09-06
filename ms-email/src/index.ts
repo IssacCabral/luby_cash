@@ -4,7 +4,9 @@ import Consumer from "./kafka/Consumer"
     const topics = [
         'new-client-email',
         'desaproved-client-email',
-        'remember-token-email'
+        'remember-token-email',
+        'issuer-transaction-email',
+        'recipient-transaction-email'
     ]
 
     const consumer = new Consumer()
