@@ -4,7 +4,6 @@ import StoreValidator from 'App/Validators/Client/StoreValidator'
 
 import axios from 'axios'
 
-import { ReturnClientAfterCreate } from 'App/utils/ReturnClient'
 import CreateApprovedClient from 'App/utils/CreateApprovedClient'
 
 import {sendDesaprovedClientEmail} from '../../../kafka/execute_kafka_message/sendDesaprovedClientEmail'
@@ -31,7 +30,7 @@ export default class ClientsController {
         // send kafkamessage
         await sendNewClientEmail({full_name: client.fullName, email: client.email})
 
-        return response.created({ clientCreated: await ReturnClientAfterCreate(client.cpf) })
+        return response.created({ clientCreated: res.data })
       } catch (error) {
         return response.badRequest({ message: 'There was an error saving as a client', originalError: error.message })
       }
@@ -41,6 +40,5 @@ export default class ClientsController {
     }
 
   }
-
 
 }

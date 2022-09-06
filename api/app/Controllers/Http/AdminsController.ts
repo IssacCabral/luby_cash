@@ -6,28 +6,28 @@ import Role from 'App/Models/Role'
 import StoreValidator from 'App/Validators/Admin/StoreValidator'
 import UpdateValidator from 'App/Validators/Admin/UpdateValidator'
 
-import {ReturnAdminAfterCreate, ReturnAdminAfterUpdate} from 'App/utils/ReturnAdmins'
+import { ReturnAdminAfterCreate, ReturnAdminAfterUpdate } from 'App/utils/ReturnAdmins'
 
 export default class AdminsController {
-  public async index({request, response}: HttpContextContract) {
+  public async index({ request, response }: HttpContextContract) {
     const { page, per_page, noPaginate, ...inputs } = request.qs()
 
     if (noPaginate) {
       return await User.query()
-        .filter(inputs)
-        .preload('roles', (profileQuery) => {
-          profileQuery.where('name', 'admin')
+        .whereHas('roles', (rolesQuery) => {
+          rolesQuery.where('name', 'admin')
         })
-        .orderBy('id', 'desc')
+        .preload('roles')
+        .filter(inputs)
     }
 
     try {
       const admins = await User.query()
-        .filter(inputs)
-        .preload('roles', (profileQuery) => {
-          profileQuery.where('name', 'admin')
+        .whereHas('roles', (rolesQuery) => {
+          rolesQuery.where('name', 'admin')
         })
-        .orderBy('id', 'desc')
+        .preload('roles')
+        .filter(inputs)
         .paginate(page || 1, per_page || 4)
 
       return response.ok({ admins })
@@ -36,53 +36,53 @@ export default class AdminsController {
     }
   }
 
-  public async store({request, response}: HttpContextContract) {
+  public async store({ request, response }: HttpContextContract) {
     const adminBody = await request.validate(StoreValidator)
 
     const admin = new User()
 
-    try{
+    try {
       admin.fill(adminBody)
 
       await admin.save()
 
       const adminRole = await Role.findByOrFail('name', 'admin')
 
-      if(adminRole){
+      if (adminRole) {
         await admin.related('roles').attach([adminRole.id])
       }
 
-      return response.created({adminCreated: await ReturnAdminAfterCreate(admin.cpf)})
-    } catch(error){
-      return response.badRequest({message: 'error in create admin', originalError: error.message})
-    }
-
-  } 
-
-  public async show({response, params}: HttpContextContract) {
-    const adminId = params.id
-
-    try{
-      const admin = await User.query()
-        .where('id', adminId)
-        .preload('roles', (profileQuery) => {
-          profileQuery.where('name', 'admin')
-        }).firstOrFail() 
-
-      return response.ok(admin)
-    } catch(error){
-      return response.notFound({message: 'admin not found', originalError: error.message})
+      return response.created({ adminCreated: await ReturnAdminAfterCreate(admin.cpf) })
+    } catch (error) {
+      return response.badRequest({ message: 'error in create admin', originalError: error.message })
     }
 
   }
 
-  public async update({auth, request, response, params}: HttpContextContract) {
+  public async show({ response, params }: HttpContextContract) {
+    const adminId = params.id
+
+    try {
+      const admin = await User.query()
+        .where('id', adminId)
+        .preload('roles', (profileQuery) => {
+          profileQuery.where('name', 'admin')
+        }).firstOrFail()
+
+      return response.ok(admin)
+    } catch (error) {
+      return response.notFound({ message: 'admin not found', originalError: error.message })
+    }
+
+  }
+
+  public async update({ auth, request, response, params }: HttpContextContract) {
     const bodyUpdate = await request.validate(UpdateValidator)
     const adminId = params.id
 
     let admin = new User()
 
-    try{
+    try {
       const checkId = auth.user?.id == adminId
 
       if (!checkId) {
@@ -93,31 +93,30 @@ export default class AdminsController {
 
       await admin.merge(bodyUpdate).save()
 
-      return response.ok({adminUpdated: await ReturnAdminAfterUpdate(admin.id)})
-    } catch(error){
-      return response.badRequest({message: 'error in update user', originalError: error.message})
+      return response.ok({ adminUpdated: await ReturnAdminAfterUpdate(admin.id) })
+    } catch (error) {
+      return response.badRequest({ message: 'error in update user', originalError: error.message })
     }
 
   }
 
-  public async destroy({auth, response, params}: HttpContextContract) {
+  public async destroy({ auth, response, params }: HttpContextContract) {
     const adminId = params.id
     const userLoggedId = auth.user!.id
 
-    if(adminId === userLoggedId) return response.badRequest({message: "you can't delete yourself"})
+    if (adminId === userLoggedId) return response.badRequest({ message: "you can't delete yourself" })
 
-    try{
+    try {
       await User.query().delete().where('id', adminId)
 
-      return response.ok({message: 'user successfull deleted'})
-    } catch(error){
+      return response.ok({ message: 'user successfull deleted' })
+    } catch (error) {
       return response.notFound({ message: 'user not found', originalError: error.message })
     }
   }
 
-  public async findAllClients(){
+  public async findAllClients() {
     
-
   }
 
 }
