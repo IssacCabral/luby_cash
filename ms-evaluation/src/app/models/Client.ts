@@ -1,4 +1,5 @@
-import {Entity, Column, CreateDateColumn, UpdateDateColumn,PrimaryGeneratedColumn, OneToMany} from 'typeorm'
+import {Entity, Column, CreateDateColumn, UpdateDateColumn,PrimaryGeneratedColumn, OneToOne, JoinColumn} from 'typeorm'
+import { Address } from './Address'
 
 @Entity('clients')
 export class Client{
@@ -25,6 +26,10 @@ export class Client{
 
     @Column()
     status: string
+
+    @OneToOne(() => Address)
+    @JoinColumn()
+    address: Address
 
     @CreateDateColumn()
     created_at: Date

@@ -11,13 +11,11 @@ export default class StoreClientService {
         const clientRepository = dataSource.getRepository(Client)
         const addressRepository = dataSource.getRepository(Address)
 
-        const client = fillClientBeforeCreate(request)
-
-        await clientRepository.save(client)
-
-        const address = fillAddressBeforeCreate(request, client.id)
-
+        const address = fillAddressBeforeCreate(request)
         await addressRepository.save(address)
+
+        const client = fillClientBeforeCreate(request, address)
+        await clientRepository.save(client)
 
         return client
     }

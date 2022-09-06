@@ -9,7 +9,7 @@ export class StoreClientController {
     async store(request: Request, response: Response) {
         const inputErrors = StoreClientBodyMandatoryData(request)
         if (inputErrors.length > 0) return response.status(400).json(inputErrors)
-
+        
         const resultValidator = await ClientStoreValidator(request, response)
 
         if(resultValidator instanceof Error) return response.status(400).json(resultValidator.message)

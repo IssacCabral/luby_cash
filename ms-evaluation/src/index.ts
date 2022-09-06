@@ -17,4 +17,4 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
 
-console.log('estou aqui no meu server')
+console.log('estou aqui no meu sever')

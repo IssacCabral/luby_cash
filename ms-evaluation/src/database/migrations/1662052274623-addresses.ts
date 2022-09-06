@@ -16,12 +16,6 @@ export class addresses1662052274623 implements MigrationInterface {
                         generationStrategy: 'increment'
                     },
                     {
-                        name: 'client_id',
-                        type: 'integer',
-                        unsigned: true,
-                        isNullable: false
-                    },
-                    {
                         name: 'street',
                         type: 'varchar'
                     },
@@ -48,14 +42,6 @@ export class addresses1662052274623 implements MigrationInterface {
                         default: 'now()'
                     }
                 ],
-                foreignKeys: [
-                    {
-                        name: 'client_address_foreign',
-                        columnNames: ['client_id'],
-                        referencedTableName: 'clients',
-                        referencedColumnNames: ['id']
-                    }
-                ]
             })
         )
     }

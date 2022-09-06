@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm"
 
-export class clients1662052262422 implements MigrationInterface {
+export class clients1662485060219 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
@@ -51,6 +51,12 @@ export class clients1662052262422 implements MigrationInterface {
                         type: 'varchar',
                     },
                     {
+                        name: 'addressId',
+                        type: 'integer',
+                        unsigned: true,
+                        isNullable: true
+                    },
+                    {
                         name: 'created_at',
                         type: 'timestamp',
                         default: 'now()'
@@ -59,6 +65,14 @@ export class clients1662052262422 implements MigrationInterface {
                         name: 'updated_at',
                         type: 'timestamp',
                         default: 'now()'
+                    }
+                ],
+                foreignKeys: [
+                    {
+                        name: 'address_client_foreign',
+                        columnNames: ['addressId'],
+                        referencedTableName: 'addresses',
+                        referencedColumnNames: ['id']
                     }
                 ]
             })
