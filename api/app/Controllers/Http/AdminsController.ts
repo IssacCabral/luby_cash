@@ -65,9 +65,11 @@ export default class AdminsController {
     try {
       const admin = await User.query()
         .where('id', adminId)
-        .preload('roles', (profileQuery) => {
-          profileQuery.where('name', 'admin')
-        }).firstOrFail()
+        .whereHas('roles', (rolesQuery) => {
+          rolesQuery.where('name', 'admin')
+        })
+        .preload('roles')
+        .firstOrFail()
 
       return response.ok(admin)
     } catch (error) {
@@ -116,7 +118,7 @@ export default class AdminsController {
   }
 
   public async findAllClients() {
-    
+
   }
 
 }
