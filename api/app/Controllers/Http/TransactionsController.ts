@@ -8,6 +8,7 @@ import { sendIssuerTransactionEmail } from '../../../kafka/execute_kafka_message
 import { sendRecipientTransactionEmail } from '../../../kafka/execute_kafka_message/sendRecipientTransactionEmail'
 
 import User from 'App/Models/User'
+import Transaction from 'App/Models/Transaction'
 
 // após salvar a transferência, deve ser enviado um email de notificação tanto para o cpf_issuer
 // como para o cpf_recipient
@@ -28,6 +29,20 @@ export default class TransactionsController {
 
     try {
       const result = await axios.post('http://evaluation:3334/transactions', { cpf_issuer, cpf_recipient, transfer_value })
+
+      try{
+        const transaction = new Transaction()
+
+        transaction.fill({
+          cpfIssuer: cpf_issuer,
+          cpfRecipient: cpf_recipient,
+          transferValue: transfer_value
+        })
+
+        await transaction.save()
+      } catch(error){
+        return response.badRequest({message: 'error in save transaction', originalError: error.message})
+      }
 
       try {
         // send kafka messages
