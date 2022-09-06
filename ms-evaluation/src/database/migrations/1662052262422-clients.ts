@@ -37,13 +37,13 @@ export class clients1662052262422 implements MigrationInterface {
                     },
                     {
                         name: 'current_balance',
-                        type: 'decimal(8,2)',
+                        type: 'float',
                         unsigned: true,
                         isNullable: true
                     },
                     {
                         name: 'average_salary',
-                        type: 'decimal(8,2)',
+                        type: 'float',
                         unsigned: true,
                     },
                     {

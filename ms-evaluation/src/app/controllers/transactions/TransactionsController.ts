@@ -1,6 +1,7 @@
 import {Request, Response} from 'express'
 import StoreTransactionBodyMandatoryData from '../../utils/StoreTransactionBodyMandatoryData'
 import TransactionValidator from '../../validators/TransactionValidator'
+import TransactionsService from '../../services/transactions/TransactionsService'
 
 export default class TransactionsController{
     async handleTransaction(request: Request, response: Response){
@@ -11,7 +12,9 @@ export default class TransactionsController{
 
         if(resultValidator instanceof Error) return response.status(400).json(resultValidator.message)
 
-        return response.json({message: 'passou tranquilo'})
+        const service = new TransactionsService()
+        const result: any = await service.execute(request)
 
+        return result instanceof Error ? response.status(400).json(result.message) : response.status(201).json(result)
     }
 }
