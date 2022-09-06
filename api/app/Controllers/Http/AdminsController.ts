@@ -114,4 +114,10 @@ export default class AdminsController {
       return response.notFound({ message: 'user not found', originalError: error.message })
     }
   }
+
+  public async findAllClients(){
+    
+
+  }
+
 }

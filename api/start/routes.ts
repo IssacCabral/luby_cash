@@ -26,6 +26,8 @@ Route.group(() => {
 // admin routes
 Route.group(() => {
   Route.resource('/admins', 'AdminsController').except(['create', 'edit'])
+
+  Route.get('/clients', 'AdminsController.findAllClients')
 })
   .prefix('luby-cash')
   .middleware(['auth', 'is:admin'])
