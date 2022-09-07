@@ -12,12 +12,15 @@ export class IndexClientsController {
 
         const clientRepository = dataSource.getRepository(Client)
 
+        console.log(`page: ${typeof page}, per_page: ${typeof per_page}, status: ${typeof status}, noPaginate: ${typeof noPaginate}, from: ${typeof from} to: ${typeof to}`)
+
         let clients: Client[]
 
         // casos em que não queremos paginar
-        if (noPaginate != undefined) {
+        if (noPaginate == "true") {
+            
             // caso em que queremos filtrar apenas pelo status
-            if (status != undefined && from == undefined) {
+            if (status != "undefined" && from == "undefined") {
                 clients = await clientRepository.find({
                     where: { status: String(status) },
                     relations: { address: true }
@@ -26,7 +29,7 @@ export class IndexClientsController {
             }
 
             // caso em que queremos filtrar apenas pelo intervalo de data
-            if (status == undefined && from !== undefined) {
+            if (status == "undefined" && from != "undefined") {
                 const { fromDate, toDate } = fromToDate(String(from), String(to))
 
                 clients = await clientRepository.find({
@@ -40,11 +43,11 @@ export class IndexClientsController {
                 })
                 return response.status(200).json({ clients })
             }
-
+            
             // caso em que queremos filtrar tanto pelo status quanto pelo intervalo de data
-            if (status != undefined && from != undefined) {
+            if (status != "undefined" && from != "undefined" ) {
                 const { fromDate, toDate } = fromToDate(String(from), String(to))
-
+                console.log('to aqui agora')
                 clients = await clientRepository.find({
                     where: {
                         created_at: Between(
@@ -58,6 +61,7 @@ export class IndexClientsController {
                 return response.status(200).json({ clients })
             }
 
+            
             // caso em que queremos retornar tudo
             return response.status(200).json({ clients: await clientRepository.find() })
         }
@@ -66,7 +70,7 @@ export class IndexClientsController {
         /* CASOS EM QUE QUEREMOS PAGINAÇÃO */
 
         // caso em que queremos filtrar apenas pelo status
-        if (status != undefined && from == undefined) {
+        if (status != "undefined" && from == "undefined") {
             clients = await clientRepository.find({
                 where: { status: String(status) },
                 relations: { address: true },
@@ -77,7 +81,7 @@ export class IndexClientsController {
         }
 
         // caso em que queremos filtrar apenas pelo intervalo de data
-        if (status == undefined && from !== undefined) {
+        if (status == "undefined" && from !== "undefined") {
             const { fromDate, toDate } = fromToDate(String(from), String(to))
 
             clients = await clientRepository.find({
@@ -94,7 +98,7 @@ export class IndexClientsController {
         }
 
         // caso em que queremos filtrar tanto pelo status quanto pelo intervalo de data
-        if (status !== undefined && from !== undefined) {
+        if (status !== "undefined" && from !== "undefined") {
             const { fromDate, toDate } = fromToDate(String(from), String(to))
 
             clients = await clientRepository.find({
