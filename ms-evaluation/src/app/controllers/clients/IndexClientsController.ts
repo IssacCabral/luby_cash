@@ -1,40 +1,123 @@
 import { Request, Response } from "express";
+import { Like } from "typeorm";
 import dataSource from "../../../database/data-source";
 import { Client } from "../../models/Client";
+import { Between } from "typeorm";
 
-export class IndexClientsController{
-    async index(request: Request, response: Response){
-        const {page, per_page, status, noPaginate} = request.query
+import fromToDate from "../../utils/fromToDate";
 
-        const clientRepository = dataSource.getRepository(Client)       
+export class IndexClientsController {
+    async index(request: Request, response: Response) {
+        const { page, per_page, status, noPaginate, from, to } = request.query
+
+        const clientRepository = dataSource.getRepository(Client)
 
         let clients: Client[]
 
-        if(noPaginate !== "undefined"){
-            clients = await clientRepository.find()
-            return response.json({allClients: clients})
+        // casos em que não queremos paginar
+        if (noPaginate != undefined) {
+            // caso em que queremos filtrar apenas pelo status
+            if (status != undefined && from == undefined) {
+                clients = await clientRepository.find({
+                    where: { status: String(status) },
+                    relations: { address: true }
+                })
+                return response.status(200).json({ clients })
+            }
+
+            // caso em que queremos filtrar apenas pelo intervalo de data
+            if (status == undefined && from !== undefined) {
+                const { fromDate, toDate } = fromToDate(String(from), String(to))
+
+                clients = await clientRepository.find({
+                    where: {
+                        created_at: Between(
+                            new Date(fromDate[0], fromDate[1], fromDate[2]),
+                            new Date(toDate[0], toDate[1], toDate[2])
+                        )
+                    },
+                    relations: { address: true }
+                })
+                return response.status(200).json({ clients })
+            }
+
+            // caso em que queremos filtrar tanto pelo status quanto pelo intervalo de data
+            if (status != undefined && from != undefined) {
+                const { fromDate, toDate } = fromToDate(String(from), String(to))
+
+                clients = await clientRepository.find({
+                    where: {
+                        created_at: Between(
+                            new Date(fromDate[0], fromDate[1], fromDate[2]),
+                            new Date(toDate[0], toDate[1], toDate[2])
+                        ),
+                        status: String(status)
+                    },
+                    relations: { address: true }
+                })
+                return response.status(200).json({ clients })
+            }
+
+            // caso em que queremos retornar tudo
+            return response.status(200).json({ clients: await clientRepository.find() })
         }
 
-        if(status == "undefined"){
+
+        /* CASOS EM QUE QUEREMOS PAGINAÇÃO */
+
+        // caso em que queremos filtrar apenas pelo status
+        if (status != undefined && from == undefined) {
             clients = await clientRepository.find({
-                relations: {address: true},
+                where: { status: String(status) },
+                relations: { address: true },
                 take: Number(per_page) || 4,
                 skip: (Number(page) - 1) * Number(per_page) || 0
             })
-            return response.json({clients})
+            return response.status(200).json({ clients })
         }
 
-        if(status !== "undefined"){
+        // caso em que queremos filtrar apenas pelo intervalo de data
+        if (status == undefined && from !== undefined) {
+            const { fromDate, toDate } = fromToDate(String(from), String(to))
+
             clients = await clientRepository.find({
-                where: {status: String(status)},
-                relations: {address: true},
+                where: {
+                    created_at: Between(
+                        new Date(fromDate[0], fromDate[1], fromDate[2]),
+                        new Date(toDate[0], toDate[1], toDate[2])
+                    )
+                },
                 take: Number(per_page) || 4,
                 skip: (Number(page) - 1) * Number(per_page) || 0
             })
-            return response.json({clients})
+            return response.status(200).json({ clients })
         }
 
-        
+        // caso em que queremos filtrar tanto pelo status quanto pelo intervalo de data
+        if (status !== undefined && from !== undefined) {
+            const { fromDate, toDate } = fromToDate(String(from), String(to))
+
+            clients = await clientRepository.find({
+                where: {
+                    created_at: Between(
+                        new Date(fromDate[0], fromDate[1], fromDate[2]),
+                        new Date(toDate[0], toDate[1], toDate[2])
+                    ),
+                    status: String(status)
+                },
+                take: Number(per_page) || 4,
+                skip: (Number(page) - 1) * Number(per_page) || 0
+            })
+            return response.status(200).json({ clients })
+        }
+
+        // caso em que retornamos sem qualquer condição, porém páginado
+        return response.status(200).json({
+            clients: await clientRepository.find({
+                take: Number(per_page) || 4,
+                skip: (Number(page) - 1) * Number(per_page) || 0
+            })
+        })
 
     }
 }
