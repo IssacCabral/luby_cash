@@ -10,28 +10,26 @@ export class IndexClientsController{
 
         let clients: Client[]
 
-        if(noPaginate){
+        if(noPaginate !== "undefined"){
             clients = await clientRepository.find()
             return response.json({allClients: clients})
         }
 
-        if(!status){
+        if(status == "undefined"){
             clients = await clientRepository.find({
                 relations: {address: true},
                 take: Number(per_page) || 4,
-                skip: (Number(page) - 1) * Number(per_page) || 0,
-                cache: true
+                skip: (Number(page) - 1) * Number(per_page) || 0
             })
             return response.json({clients})
         }
 
-        if(status){
+        if(status !== "undefined"){
             clients = await clientRepository.find({
                 where: {status: String(status)},
                 relations: {address: true},
                 take: Number(per_page) || 4,
-                skip: (Number(page) - 1) * Number(per_page) || 0,
-                cache: true
+                skip: (Number(page) - 1) * Number(per_page) || 0
             })
             return response.json({clients})
         }

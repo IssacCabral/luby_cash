@@ -7,6 +7,7 @@ import StoreValidator from 'App/Validators/Admin/StoreValidator'
 import UpdateValidator from 'App/Validators/Admin/UpdateValidator'
 
 import { ReturnAdminAfterCreate, ReturnAdminAfterUpdate } from 'App/utils/ReturnAdmins'
+import axios from 'axios'
 
 export default class AdminsController {
   public async index({ request, response }: HttpContextContract) {
@@ -117,8 +118,18 @@ export default class AdminsController {
     }
   }
 
-  public async findAllClients() {
+  public async findAllClients({request, response}: HttpContextContract) {
+    const {page, per_page, status, noPaginate} = request.qs()
 
+    try{
+      const res = await axios.get(
+        `http://evaluation:3334/clients?noPaginate=${noPaginate}&page=${page}&per_page=${per_page}&status=${status}`
+        )
+        
+      return response.ok({data: res.data})
+    } catch(error){
+      return response.badRequest({ error: error?.response?.data })
+    }
   }
 
 }
