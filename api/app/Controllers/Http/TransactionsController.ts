@@ -10,8 +10,7 @@ import { sendRecipientTransactionEmail } from '../../../kafka/execute_kafka_mess
 import User from 'App/Models/User'
 import Transaction from 'App/Models/Transaction'
 
-// após salvar a transferência, deve ser enviado um email de notificação tanto para o cpf_issuer
-// como para o cpf_recipient
+import returnClientToCheckTheirTransactions from 'App/utils/returnClientToCheckTheirTransactions'
 
 export default class TransactionsController {
   public async store({ auth, request, response }: HttpContextContract) {
@@ -56,6 +55,21 @@ export default class TransactionsController {
     } catch (error) {
       return response.badRequest({ message: 'transaction error', originalError: error?.response?.data })
     }
+
+  }
+
+  public async index({request, response, params}: HttpContextContract){
+    const clientCpf = params.clientCpf
+
+    try{
+      const client = await returnClientToCheckTheirTransactions(clientCpf)
+      return response.ok(client)
+    } catch(error){
+      return response.badRequest({message: 'client not found', originalError: error.message})
+    }
+
+
+    
 
   }
 

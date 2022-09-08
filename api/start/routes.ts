@@ -28,6 +28,7 @@ Route.group(() => {
   Route.resource('/admins', 'AdminsController').except(['create', 'edit'])
 
   Route.get('/clients', 'AdminsController.findAllClients')
+  Route.get('/transactions/:clientCpf', 'TransactionsController.index').where('clientCpf', /^\d{3}.\d{3}.\d{3}-\d{2}$/)
 })
   .prefix('luby-cash')
   .middleware(['auth', 'is:admin'])

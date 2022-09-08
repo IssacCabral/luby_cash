@@ -121,8 +121,6 @@ export default class AdminsController {
   public async findAllClients({request, response}: HttpContextContract) {
     const {page, per_page, status, noPaginate, from, to} = request.qs()
 
-    console.log(`page: ${typeof page}, per_page: ${typeof per_page}, status: ${typeof status}, noPaginate: ${typeof noPaginate}, from: ${typeof from} to: ${typeof to}`)
-
     try{
       const res = await axios.get(
         `http://evaluation:3334/clients?noPaginate=${noPaginate}&page=${page}&per_page=${per_page}&status=${status}&from=${from}&to=${to}`

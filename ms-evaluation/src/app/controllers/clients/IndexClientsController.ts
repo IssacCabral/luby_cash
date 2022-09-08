@@ -12,8 +12,6 @@ export class IndexClientsController {
 
         const clientRepository = dataSource.getRepository(Client)
 
-        console.log(`page: ${typeof page}, per_page: ${typeof per_page}, status: ${typeof status}, noPaginate: ${typeof noPaginate}, from: ${typeof from} to: ${typeof to}`)
-
         let clients: Client[]
 
         // casos em que não queremos paginar
