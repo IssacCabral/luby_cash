@@ -12,6 +12,8 @@ import Transaction from 'App/Models/Transaction'
 
 import returnClientToCheckTheirTransactions from 'App/utils/returnClientToCheckTheirTransactions'
 
+import moment from 'moment'
+
 export default class TransactionsController {
   public async store({ auth, request, response }: HttpContextContract) {
     const { cpf_issuer, cpf_recipient } = await request.validate(StoreValidator)
@@ -29,7 +31,7 @@ export default class TransactionsController {
     try {
       const result = await axios.post('http://evaluation:3334/transactions', { cpf_issuer, cpf_recipient, transfer_value })
 
-      try{
+      try {
         const transaction = new Transaction()
 
         transaction.fill({
@@ -39,8 +41,8 @@ export default class TransactionsController {
         })
 
         await transaction.save()
-      } catch(error){
-        return response.badRequest({message: 'error in save transaction', originalError: error.message})
+      } catch (error) {
+        return response.badRequest({ message: 'error in save transaction', originalError: error.message })
       }
 
       try {
@@ -48,7 +50,7 @@ export default class TransactionsController {
         await sendIssuerTransactionEmail({ full_name: issuer.fullName, recipient_name: recipient.fullName, email: issuer.email, transfer_value })
         await sendRecipientTransactionEmail({ full_name: recipient.fullName, issuer_name: issuer.fullName, email: recipient.email, transfer_value })
       } catch (error) {
-        return response.badRequest({message: 'error in send kafka message', originalError: error.message})
+        return response.badRequest({ message: 'error in send kafka message', originalError: error.message })
       }
 
       return response.ok(result.data)
@@ -58,18 +60,56 @@ export default class TransactionsController {
 
   }
 
-  public async index({request, response, params}: HttpContextContract){
+  public async index({ request, response, params }: HttpContextContract) {
     const clientCpf = params.clientCpf
+    const { page, per_page, noPaginate } = request.qs()
+    let { fromDate, toDate } = request.qs()
+    let auxToDate = toDate
 
-    try{
-      const client = await returnClientToCheckTheirTransactions(clientCpf)
-      return response.ok(client)
-    } catch(error){
-      return response.badRequest({message: 'client not found', originalError: error.message})
+    try {
+      await returnClientToCheckTheirTransactions(clientCpf)
+    } catch (error) {
+      return response.badRequest({ message: 'client not found', originalError: error.message })
     }
 
+    if (noPaginate) {
+      if (fromDate == undefined) return await Transaction.query().where('cpf_issuer', clientCpf).orWhere('cpf_recipient', clientCpf)
 
-    
+      const toDateDay = moment(toDate).add({ day: 1 }).date().toString()
+      const toDateTokens = toDate.split('-')
+
+      return await Transaction.query()
+        .where('created_at', '>=', fromDate)
+        .andWhere('created_at', '<=', `${toDateTokens[0]}-${toDateTokens[1]}-${toDateDay}`)
+        .andWhere((query) => {
+          query.where('cpf_issuer', clientCpf)
+          query.orWhere('cpf_recipient', clientCpf)
+        })
+    }
+
+    if (noPaginate == undefined) {
+      if (fromDate == undefined) {
+        const clientTransactions = await Transaction.query()
+          .where('cpf_issuer', clientCpf)
+          .orWhere('cpf_recipient', clientCpf)
+          .paginate(page || 1, per_page || 4)
+
+        return response.ok(clientTransactions)
+      }
+
+      const toDateDay = moment(auxToDate).add({ day: 1 }).date().toString()
+      const toDateTokens = auxToDate.split('-')
+
+      return await Transaction.query()
+        .where('created_at', '>=', fromDate)
+        .andWhere('created_at', '<=', `${toDateTokens[0]}-${toDateTokens[1]}-${toDateDay}`)
+        .andWhere((query) => {
+          query.where('cpf_issuer', clientCpf)
+          query.orWhere('cpf_recipient', clientCpf)
+        })
+        .paginate(page || 1, per_page || 4)
+
+    }
 
   }
 

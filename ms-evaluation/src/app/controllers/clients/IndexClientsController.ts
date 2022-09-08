@@ -45,7 +45,7 @@ export class IndexClientsController {
             // caso em que queremos filtrar tanto pelo status quanto pelo intervalo de data
             if (status != "undefined" && from != "undefined" ) {
                 const { fromDate, toDate } = fromToDate(String(from), String(to))
-                console.log('to aqui agora')
+
                 clients = await clientRepository.find({
                     where: {
                         created_at: Between(
